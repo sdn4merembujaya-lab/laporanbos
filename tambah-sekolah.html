@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Tambah Sekolah - Laporan BOS</title>
+<style>:root{color-scheme:light dark}body{font:14px/1.5 system-ui,sans-serif;max-width:640px;margin:20px auto;padding:0 12px}textarea,input{width:100%;box-sizing:border-box;padding:8px;font:inherit}textarea{min-height:110px}button{padding:8px 14px;margin:6px 6px 6px 0;cursor:pointer}.c{border:1px solid #8885;border-radius:10px;padding:12px;margin-bottom:14px}small{opacity:.75}</style></head><body>
+<h2>Tambah Sekolah</h2>
+<p><small>Halaman ini hanya membuat kode. Sekolah baru baru berlaku setelah isi <b>akses.js</b> di GitHub diganti dengan hasil di bawah.</small></p>
+<div class="c"><b>1. Cek nama sekolah</b><br><small>Sudah terdaftar atau belum?</small><input id="ck" placeholder="mis. SDN 1 Merembu" oninput="cek()"><p id="cr"></p></div>
+<div class="c"><b>2. Tambah sekolah baru</b><br><small>Satu nama sekolah per baris.</small><textarea id="nm" placeholder="SDN 4 Contoh&#10;SDN 5 Contoh"></textarea><button onclick="buat()">Buat isi akses.js baru</button><p id="inf"></p><textarea id="out" readonly placeholder="Hasil muncul di sini"></textarea><button onclick="salin()">Salin hasil</button></div>
+<div class="c"><b>3. Pasang di GitHub</b><ol><li>Buka repo, klik file <b>akses.js</b>, lalu klik ikon pensil (Edit).</li><li>Hapus seluruh isinya, tempel hasil yang disalin, klik <b>Commit changes</b>.</li><li>Tunggu 1 sampai 2 menit, lalu muat ulang aplikasi.</li></ol></div>
+<script src="akses.js"></script><script>
+function sha(s){const b=new TextEncoder().encode(s),l=b.length,n=((l+9+63)>>6)<<6,w=new Uint8Array(n),v=new DataView(w.buffer);w.set(b);w[l]=128;v.setUint32(n-8,Math.floor(l*8/4294967296));v.setUint32(n-4,(l*8)>>>0);
+const K=[],H=[],fr=x=>((x-Math.floor(x))*4294967296)|0,rr=(x,k)=>(x>>>k)|(x<<(32-k));let p=2,c=0;
+for(;c<64;p++){let q=1;for(let d=2;d*d<=p;d++)if(p%d==0){q=0;break}if(q){if(c<8)H[c]=fr(Math.sqrt(p));K[c]=fr(Math.cbrt(p));c++}}
+for(let o=0;o<n;o+=64){const W=[];for(let i=0;i<16;i++)W[i]=v.getUint32(o+i*4);
+for(let i=16;i<64;i++){const a=W[i-15],e=W[i-2];W[i]=(W[i-16]+(rr(a,7)^rr(a,18)^(a>>>3))+W[i-7]+(rr(e,17)^rr(e,19)^(e>>>10)))|0}
+let [a,b2,c2,d,e,f,g,h]=H;
+for(let i=0;i<64;i++){const t1=(h+(rr(e,6)^rr(e,11)^rr(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((rr(a,2)^rr(a,13)^rr(a,22))+((a&b2)^(a&c2)^(b2&c2)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c2;c2=b2;b2=a;a=(t1+t2)|0}
+H[0]=(H[0]+a)|0;H[1]=(H[1]+b2)|0;H[2]=(H[2]+c2)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0}
+return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}
+const nrm=s=>String(s||'').toLowerCase().replace(/\s+/g,' ').trim(),$=i=>document.getElementById(i);
+const ada=(window.AKSES&&window.AKSES.sekolah)||[];
+$('inf').textContent='Sekolah terdaftar saat ini: '+ada.length+'.';
+function cek(){const v=nrm($('ck').value);$('cr').textContent=!v?'':ada.includes(sha('bos|'+v))?'Terdaftar.':'Belum terdaftar.'}
+function buat(){const n=$('nm').value.split('\n').map(nrm).filter(Boolean),h=[...ada];let t=0;n.forEach(x=>{const k=sha('bos|'+x);if(!h.includes(k)){h.push(k);t++}});
+$('out').value='// Daftar sekolah yang boleh membuat akun Bendahara (disimpan sebagai hash, bukan nama asli).\n// Untuk menambah sekolah, buka halaman tambah-sekolah.html lalu salin hasilnya ke file ini.\nwindow.AKSES={sekolah:[\n'+h.map(x=>'"'+x+'"').join(',\n')+'\n]};\n';
+$('inf').textContent='Terdaftar sebelumnya: '+ada.length+'. Ditambah: '+t+'. Total: '+h.length+'.'}
+function salin(){const o=$('out');if(!o.value)return;o.select();try{navigator.clipboard.writeText(o.value)}catch(e){document.execCommand('copy')}}
+</script></body></html>

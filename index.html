@@ -23,7 +23,7 @@ label{display:block;font-size:12px;color:var(--m)}input{width:100%;padding:7px;b
 @media print{body>*:not(#pv){display:none!important}#pv{position:static;background:none;display:block;padding:0}.bar{display:none!important}.paper{margin:0;padding:0;max-width:none}}
 </style></head><body>
 <header><h1>Aplikasi Laporan BOS</h1><small>BKU, Kwitansi, Invois, BAST, SPPD, Surat Tugas dan Laporan, dari RPD</small><div id="who" style="margin-top:4px"></div></header>
-<nav id="nav"></nav><main id="m"></main><div id="pv"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<nav id="nav"></nav><main id="m"></main><div id="pv"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="akses.js"></script>
 <script>
 let SNP=[],G=[],R=[];
 const K='bos_v1',$=s=>document.querySelector(s),rp=n=>(+n||0).toLocaleString('id-ID'),E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -187,6 +187,19 @@ function ttdFix(root){root.querySelectorAll('.ttd').forEach(t=>{const pp=t.previ
 const cvh=()=>+S.s.cvh||(PG.k=='F4'?245:205),cvg=()=>Math.max(6,Math.round((cvh()-128)/4));
 const TABS={sek:'Data Sekolah',pgw:'Daftar Pegawai',rpd:'RPD dan Realisasi',trx:'Transaksi dan Dokumen',pen:'Daftar Penerima',bku:'BKU',lap:'Laporan BOS'};let V='sek';
 const AK='bos_auth',ADM=['sek','pgw'];
+function sha(s){const b=new TextEncoder().encode(s),l=b.length,n=((l+9+63)>>6)<<6,w=new Uint8Array(n),v=new DataView(w.buffer);w.set(b);w[l]=128;v.setUint32(n-8,Math.floor(l*8/4294967296));v.setUint32(n-4,(l*8)>>>0);
+const K=[],H=[],fr=x=>((x-Math.floor(x))*4294967296)|0,rr=(x,k)=>(x>>>k)|(x<<(32-k));let p=2,c=0;
+for(;c<64;p++){let q=1;for(let d=2;d*d<=p;d++)if(p%d==0){q=0;break}if(q){if(c<8)H[c]=fr(Math.sqrt(p));K[c]=fr(Math.cbrt(p));c++}}
+for(let o=0;o<n;o+=64){const W=[];for(let i=0;i<16;i++)W[i]=v.getUint32(o+i*4);
+for(let i=16;i<64;i++){const a=W[i-15],e=W[i-2];W[i]=(W[i-16]+(rr(a,7)^rr(a,18)^(a>>>3))+W[i-7]+(rr(e,17)^rr(e,19)^(e>>>10)))|0}
+let [a,b2,c2,d,e,f,g,h]=H;
+for(let i=0;i<64;i++){const t1=(h+(rr(e,6)^rr(e,11)^rr(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0,t2=((rr(a,2)^rr(a,13)^rr(a,22))+((a&b2)^(a&c2)^(b2&c2)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c2;c2=b2;b2=a;a=(t1+t2)|0}
+H[0]=(H[0]+a)|0;H[1]=(H[1]+b2)|0;H[2]=(H[2]+c2)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0}
+return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}
+const nrm=s=>String(s||'').toLowerCase().replace(/\s+/g,' ').trim();
+const AKS=window.AKSES||null;
+const okS=u=>!!(AKS&&Array.isArray(AKS.sekolah)&&AKS.sekolah.includes(sha('bos|'+nrm(u))));
+const msgS=()=>AKS?'Nama sekolah belum terdaftar. Hubungi Admin pengelola aplikasi untuk didaftarkan.':'File akses.js tidak ditemukan. Hubungi Admin pengelola aplikasi.';
 const getA=()=>{try{return JSON.parse(localStorage.getItem(AK))}catch(e){return null}};
 const putA=a=>{try{localStorage.setItem(AK,JSON.stringify(a));return 1}catch(e){return 0}};
 let ROLE=null;try{ROLE=getA()?sessionStorage.getItem('bos_role'):null;if(ROLE!='a'&&ROLE!='b')ROLE=null}catch(e){}
@@ -198,11 +211,12 @@ const hm=h=>h&&h[0]=='w'?'w':'p';
 const setM=(t,ok)=>{const e=$('#am');if(e){e.textContent=t;e.style.color=ok?'#0f766e':'#b42318'}};
 let FL_=0,FT_=0;
 function authView(){$('#nav').innerHTML='';$('#who').innerHTML='';const A=getA();
-$('#m').innerHTML=A?`<div class="card" style="max-width:380px;margin:30px auto"><b>Masuk</b><p style="color:var(--m);margin:4px 0 8px">Masukkan username dan password Admin atau Bendahara.</p><label>Username<input id="lu" autocomplete="username" onkeydown="if(event.key=='Enter')$('#lp').focus()"></label><label>Password<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')dologin()"></label><p style="margin:10px 0 0"><button class="p" onclick="dologin()">Masuk</button></p><p id="am" style="margin:8px 0 0"></p></div>`
-:`<div class="card" style="max-width:460px;margin:30px auto"><b>Pengaturan awal akun</b><p style="color:var(--m);margin:4px 0 8px">Buat akun untuk Admin dan Bendahara. Catat password Anda: jika Admin lupa password, akun hanya bisa diatur ulang dengan menghapus data aplikasi di browser, jadi cadangkan data secara berkala.</p><b>Admin</b><label>Username<input id="su_a" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_a" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_a" type="password" autocomplete="new-password"></label><p style="margin:12px 0 0"><b>Bendahara</b></p><label>Username<input id="su_b" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_b" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_b" type="password" autocomplete="new-password"></label><p style="margin:10px 0 0"><button class="p" onclick="dosetup()">Simpan dan masuk</button></p><p id="am" style="margin:8px 0 0"></p></div>`}
+$('#m').innerHTML=A?`<div class="card" style="max-width:380px;margin:30px auto"><b>Masuk</b><p style="color:var(--m);margin:4px 0 8px">Bendahara masuk dengan nama sekolah sebagai username. Admin memakai username Admin.</p><label>Username<input id="lu" autocomplete="username" onkeydown="if(event.key=='Enter')$('#lp').focus()"></label><label>Password<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')dologin()"></label><p style="margin:10px 0 0"><button class="p" onclick="dologin()">Masuk</button></p><p id="am" style="margin:8px 0 0"></p></div>`
+:`<div class="card" style="max-width:460px;margin:30px auto"><b>Pengaturan awal akun</b><p style="color:var(--m);margin:4px 0 8px">Buat akun untuk Admin dan Bendahara. Catat password Anda: jika Admin lupa password, akun hanya bisa diatur ulang dengan menghapus data aplikasi di browser, jadi cadangkan data secara berkala.</p><b>Admin</b><label>Username<input id="su_a" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_a" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_a" type="password" autocomplete="new-password"></label><p style="margin:12px 0 0"><b>Bendahara</b></p><label>Username (nama sekolah yang terdaftar, mis. SDN 1 Merembu)<input id="su_b" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_b" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_b" type="password" autocomplete="new-password"></label><p style="margin:10px 0 0"><button class="p" onclick="dosetup()">Simpan dan masuk</button></p><p id="am" style="margin:8px 0 0"></p></div>`}
 async function dosetup(){const g=i=>$('#'+i).value,o={};
 for(const r of ['a','b']){const u=g('su_'+r).trim(),p=g('sp_'+r),q=g('sq_'+r);
 if(u.length<3)return setM('Username '+(r=='a'?'Admin':'Bendahara')+' minimal 3 karakter.');
+if(r=='b'&&!okS(u))return setM(msgS());
 if(p.length<6)return setM('Password '+(r=='a'?'Admin':'Bendahara')+' minimal 6 karakter.');
 if(p!=q)return setM('Ulangi password '+(r=='a'?'Admin':'Bendahara')+' belum sama.');
 const s=rnd();o[r]={u,s,h:await hsh(p,s)}}
@@ -210,8 +224,8 @@ if(o.a.u.toLowerCase()==o.b.u.toLowerCase())return setM('Username Admin dan Bend
 if(!putA(o))return setM('Gagal menyimpan. Pastikan browser mengizinkan penyimpanan data situs.');
 ROLE='a';try{sessionStorage.setItem('bos_role','a')}catch(e){}V='sek';draw()}
 async function dologin(){if(Date.now()<FT_)return setM('Terlalu banyak percobaan. Coba lagi dalam '+Math.ceil((FT_-Date.now())/1000)+' detik.');
-const u=$('#lu').value.trim().toLowerCase(),p=$('#lp').value,A=getA();
-for(const r of ['a','b']){if(A[r].u.toLowerCase()==u&&await hsh(p,A[r].s,hm(A[r].h))==A[r].h){FL_=0;ROLE=r;try{sessionStorage.setItem('bos_role',r)}catch(e){}V=r=='a'?'sek':'trx';draw();return}}
+const u=nrm($('#lu').value),p=$('#lp').value,A=getA();
+for(const r of ['a','b']){if(nrm(A[r].u)==u&&await hsh(p,A[r].s,hm(A[r].h))==A[r].h){if(r=='b'&&!okS(A[r].u))return setM(msgS());FL_=0;ROLE=r;try{sessionStorage.setItem('bos_role',r)}catch(e){}V=r=='a'?'sek':'trx';draw();return}}
 if(++FL_>=5){FL_=0;FT_=Date.now()+30000}setM('Username atau password salah.')}
 function lo(){ROLE=null;try{sessionStorage.removeItem('bos_role')}catch(e){}draw()}
 TABS.akun='Akun dan Keamanan';
@@ -221,6 +235,7 @@ return `<div class="card" style="max-width:420px"><b>Ubah password saya</b><div 
 async function sacc(r){const A=getA(),u=$('#au_'+r).value.trim(),p=$('#ap_'+r).value,q=$('#aq_'+r).value,x=r=='a'?'b':'a';
 if(u.length<3)return setM('Username minimal 3 karakter.');
 if(u.toLowerCase()==A[x].u.toLowerCase())return setM('Username tidak boleh sama dengan akun lain.');
+if(r=='b'&&!okS(u))return setM(msgS());
 if(p||q){if(p.length<6)return setM('Password baru minimal 6 karakter.');if(p!=q)return setM('Ulangi password belum sama.');A[r].s=rnd();A[r].h=await hsh(p,A[r].s)}
 A[r].u=u;putA(A)?(draw(),setM('Akun '+(r=='a'?'Admin':'Bendahara')+' disimpan.',1)):setM('Gagal menyimpan.')}
 async function spw(){const A=getA(),o=$('#ao').value,p=$('#ap').value,q=$('#aq').value;
