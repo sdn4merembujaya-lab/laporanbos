@@ -18,6 +18,9 @@ Aplikasi web satu file untuk membuat dokumen pertanggungjawaban Dana BOS: BKU, k
 - Ini pengunci tingkat aplikasi untuk mencegah akses iseng di komputer bersama. Ini bukan keamanan server: orang yang menguasai browser tersebut dan paham developer tools masih bisa membaca data tersimpan.
 - Lupa password Admin: akun hanya bisa diatur ulang dengan menghapus kunci `bos_auth` di penyimpanan situs (developer tools) atau menghapus data situs. Cadangkan data lebih dulu.
 
+## Ringkasan
+- Halaman pertama setelah login menampilkan total RPD, realisasi, sisa anggaran, dan persentase untuk periode yang dipilih, serta tabel semua periode.
+
 ## Data dan privasi
 - Semua data tersimpan di browser masing-masing pengguna (localStorage). Tidak ada data yang dikirim ke server.
 - Data tidak pindah antar perangkat. Gunakan fitur cadangan di aplikasi sebelum membersihkan cache browser.
