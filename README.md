@@ -19,7 +19,8 @@ Aplikasi web satu file untuk membuat dokumen pertanggungjawaban Dana BOS: BKU, k
 - Lupa password Admin: akun hanya bisa diatur ulang dengan menghapus kunci `bos_auth` di penyimpanan situs (developer tools) atau menghapus data situs. Cadangkan data lebih dulu.
 
 ## Ringkasan
-- Halaman pertama setelah login menampilkan total RPD, realisasi, sisa anggaran, dan persentase untuk periode yang dipilih, serta tabel semua periode.
+- Menu ada di sisi kiri (di HP berada di bagian bawah layar), dengan pilihan periode di bagian atasnya.
+- Halaman pertama setelah login menampilkan total RPD, realisasi, sisa anggaran, jumlah transaksi, grafik realisasi per bulan (dari tanggal transaksi), pembagian per standar nasional pendidikan, progres per standar, dan tabel semua periode.
 
 ## Data dan privasi
 - Semua data tersimpan di browser masing-masing pengguna (localStorage). Tidak ada data yang dikirim ke server.
