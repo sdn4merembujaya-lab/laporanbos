@@ -21,6 +21,16 @@ label{display:block;font-size:12px;color:var(--m)}input{width:100%;padding:7px;b
 .kop{text-align:center;border-bottom:3px double #000;padding-bottom:6px;margin-bottom:12px}.kop b{font-size:15px}
 .ttd{display:flex;justify-content:space-around;margin-top:24px;text-align:center}.ttd div{min-width:30%}
 @media print{body>*:not(#pv){display:none!important}#pv{position:static;background:none;display:block;padding:0}.bar{display:none!important}.paper{margin:0;padding:0;max-width:none}}
+
+header{padding:16px 18px;background:linear-gradient(135deg,#0f766e,#115e59)}h1{font-size:19px;letter-spacing:.2px}
+#who{margin-top:6px}#who small{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}#who button{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.4)}
+nav{position:sticky;top:0;z-index:5;box-shadow:0 1px 6px rgba(0,0,0,.08);scrollbar-width:thin}nav button{padding:8px 12px;border-radius:999px}
+.card{box-shadow:0 1px 3px rgba(16,24,40,.06);border-radius:12px;padding:14px}button.p{font-weight:600}button:hover{filter:brightness(.96)}
+input:focus,select:focus{outline:2px solid var(--a);outline-offset:0}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}.st div{background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:10px}.st small{color:var(--m);display:block}.st b{font-size:17px}
+.bar2{height:10px;background:var(--bg);border:1px solid var(--b);border-radius:99px;overflow:hidden}.bar2 i{display:block;height:100%;background:var(--a)}
+.eye{margin-top:4px;font-size:12px}
+@media(max-width:640px){main{padding:8px}.card{padding:10px}button{padding:9px 12px}input,select{font-size:16px}main table{display:block;overflow-x:auto;white-space:nowrap}h1{font-size:17px}}
 </style></head><body>
 <header><h1>Aplikasi Laporan BOS</h1><small>BKU, Kwitansi, Invois, BAST, SPPD, Surat Tugas dan Laporan, dari RPD</small><div id="who" style="margin-top:4px"></div></header>
 <nav id="nav"></nav><main id="m"></main><div id="pv"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="akses.js"></script>
@@ -190,7 +200,7 @@ DOC.pg=()=>{const s=S.s,c=s.sp||{},N_=nm(),Dn='Dinas '+tp(s.dinas)+' Kabupaten '
 const tp=v=>E(String(v||'').toLowerCase().replace(/(^|[\s\-\/(])([a-z])/g,(m,a,b)=>a+b.toUpperCase())||'......');
 function ttdFix(root){root.querySelectorAll('.ttd').forEach(t=>{const pp=t.previousElementSibling;if(!pp||pp.tagName!='P'||!/text-align:\s*right/.test(pp.getAttribute('style')||''))return;if(!/,\s*(\d{1,2}\s+\S+\s+\d{4}|\.{3,})/.test(pp.textContent))return;const c=[...t.children];let last=-1;c.forEach((d,i)=>{if(d.innerHTML.trim())last=i});if(last<0)return;c.forEach((d,i)=>{if(i==last)d.innerHTML='<span style="white-space:nowrap">'+pp.innerHTML+'</span><br>'+d.innerHTML;else if(d.innerHTML.trim())d.innerHTML='&nbsp;<br>'+d.innerHTML});pp.remove()})}
 const cvh=()=>+S.s.cvh||(PG.k=='F4'?245:205),cvg=()=>Math.max(6,Math.round((cvh()-128)/4));
-const TABS={sek:'Data Sekolah',pgw:'Daftar Pegawai',rpd:'RPD dan Realisasi',trx:'Transaksi dan Dokumen',pen:'Daftar Penerima',bku:'BKU',lap:'Laporan BOS'};let V='sek';
+const TABS={rg:'Ringkasan',sek:'Data Sekolah',pgw:'Daftar Pegawai',rpd:'RPD dan Realisasi',trx:'Transaksi dan Dokumen',pen:'Daftar Penerima',bku:'BKU',lap:'Laporan BOS'};let V='rg';
 const AK='bos_auth',ADM=['sek','pgw'];
 function sha(s){const b=new TextEncoder().encode(s),l=b.length,n=((l+9+63)>>6)<<6,w=new Uint8Array(n),v=new DataView(w.buffer);w.set(b);w[l]=128;v.setUint32(n-8,Math.floor(l*8/4294967296));v.setUint32(n-4,(l*8)>>>0);
 const K=[],H=[],fr=x=>((x-Math.floor(x))*4294967296)|0,rr=(x,k)=>(x>>>k)|(x<<(32-k));let p=2,c=0;
@@ -227,10 +237,10 @@ if(p!=q)return setM('Ulangi password '+(r=='a'?'Admin':'Bendahara')+' belum sama
 const s=rnd();o[r]={u,s,h:await hsh(p,s)}}
 if(o.a.u.toLowerCase()==o.b.u.toLowerCase())return setM('Username Admin dan Bendahara tidak boleh sama.');
 if(!putA(o))return setM('Gagal menyimpan. Pastikan browser mengizinkan penyimpanan data situs.');
-ROLE='a';try{sessionStorage.setItem('bos_role','a')}catch(e){}V='sek';draw()}
+ROLE='a';try{sessionStorage.setItem('bos_role','a')}catch(e){}V='rg';draw()}
 async function dologin(){if(Date.now()<FT_)return setM('Terlalu banyak percobaan. Coba lagi dalam '+Math.ceil((FT_-Date.now())/1000)+' detik.');
 const u=nrm($('#lu').value),p=$('#lp').value,A=getA();
-for(const r of ['a','b']){if(nrm(A[r].u)==u&&await hsh(p,A[r].s,hm(A[r].h))==A[r].h){if(r=='b'&&!okS(A[r].u))return setM(msgS());FL_=0;ROLE=r;try{sessionStorage.setItem('bos_role',r)}catch(e){}V=r=='a'?'sek':'trx';draw();return}}
+for(const r of ['a','b']){if(nrm(A[r].u)==u&&await hsh(p,A[r].s,hm(A[r].h))==A[r].h){if(r=='b'&&!okS(A[r].u))return setM(msgS());FL_=0;ROLE=r;try{sessionStorage.setItem('bos_role',r)}catch(e){}V='rg';draw();return}}
 if(++FL_>=5){FL_=0;FT_=Date.now()+30000}setM('Username atau password salah.')}
 function lo(){ROLE=null;try{sessionStorage.removeItem('bos_role')}catch(e){}draw()}
 TABS.akun='Akun dan Keamanan';
@@ -247,6 +257,10 @@ async function spw(){const A=getA(),o=$('#ao').value,p=$('#ap').value,q=$('#aq')
 if(await hsh(o,A.b.s,hm(A.b.h))!=A.b.h)return setM('Password saat ini salah.');
 if(p.length<6)return setM('Password baru minimal 6 karakter.');if(p!=q)return setM('Ulangi password belum sama.');
 A.b.s=rnd();A.b.h=await hsh(p,A.b.s);putA(A)?(draw(),setM('Password disimpan.',1)):setM('Gagal menyimpan.')}
-function draw(){if(!ROLE){authView();return}HP=0;const al=Object.entries(TABS).filter(([k])=>ROLE=='a'||!ADM.includes(k));if(!al.some(([k])=>k==V))V=ROLE=='a'?'sek':'trx';$('#who').innerHTML=`<small>Masuk sebagai ${ROLE=='a'?'Admin':'Bendahara'} <button onclick="lo()">Keluar</button></small>`;$('#nav').innerHTML=`<select style="padding:6px;border-radius:7px" onchange="sw(+this.value)">${SL.map((n,i)=>`<option value="${i}" ${i==CUR?'selected':''}>${n}</option>`).join('')}</select>`+al.map(([k,v])=>`<button class="${k==V?'on':''}" onclick="V='${k}';draw()">${v}</button>`).join('');$('#m').innerHTML=VW[V]();if(ROLE!='a')$('#m').querySelectorAll('input[type=file]').forEach(i=>(i.closest('label')||i).remove())}
+
+const rpT=a=>(a.R||[]).reduce((t,r)=>t+r[4]*r[6],0),rlT=a=>a.tx.reduce((t,x)=>t+ +x.jml,0),pc=(a,b)=>b>0?Math.min(100,Math.round(a/b*100)):0;
+VW.rg=()=>{const t=rpT(S),r=rlT(S),p=pc(r,t);return `<div class="card"><b>${E(S.s.sekk||S.s.sek||'Identitas sekolah belum diisi')}</b><div style="color:var(--m)">${SL[CUR]} · Tahun anggaran ${E(S.s.tahun)}</div><div class="st"><div><small>Total RPD</small><b>Rp ${rp(t)}</b></div><div><small>Realisasi</small><b>Rp ${rp(r)}</b></div><div><small>Sisa anggaran</small><b>Rp ${rp(t-r)}</b></div><div><small>Transaksi</small><b>${S.tx.length}</b></div></div><div class="bar2"><i style="width:${p}%"></i></div><div style="color:var(--m);margin-top:4px">${p}% terealisasi${t?'':' (RPD periode ini belum diimpor)'}</div></div><div class="card"><b>Semua periode</b><table style="margin-top:8px"><tr><th>Periode</th><th class="r">RPD</th><th class="r">Realisasi</th><th class="r">%</th></tr>${SL.map((n,i)=>{const a=ALL[i],x=rpT(a),y=rlT(a);return `<tr><td><a href="#" onclick="sw(${i});return false">${n}</a></td><td class="r">${rp(x)}</td><td class="r">${rp(y)}</td><td class="r">${pc(y,x)}%</td></tr>`}).join('')}</table></div>`};
+function eyes(){document.querySelectorAll('#m input[type=password]').forEach(i=>{if(i.dataset.e)return;i.dataset.e=1;const b=document.createElement('button');b.type='button';b.className='eye';b.textContent='Lihat';b.onclick=()=>{const h=i.type=='password';i.type=h?'text':'password';b.textContent=h?'Sembunyi':'Lihat'};i.after(b)})}
+function draw(){if(!ROLE){authView();eyes();return}HP=0;const al=Object.entries(TABS).filter(([k])=>ROLE=='a'||!ADM.includes(k));if(!al.some(([k])=>k==V))V='rg';$('#who').innerHTML=`<small><span>${E(S.s.sekk||S.s.sek||'Sekolah belum diisi')} · ${SL[CUR]}</span><span>${ROLE=='a'?'Admin':'Bendahara'}</span><button onclick="lo()">Keluar</button></small>`;$('#nav').innerHTML=`<select style="padding:6px;border-radius:7px" onchange="sw(+this.value)">${SL.map((n,i)=>`<option value="${i}" ${i==CUR?'selected':''}>${n}</option>`).join('')}</select>`+al.map(([k,v])=>`<button class="${k==V?'on':''}" onclick="V='${k}';draw()">${v}</button>`).join('');$('#m').innerHTML=VW[V]();if(ROLE!='a')$('#m').querySelectorAll('input[type=file]').forEach(i=>(i.closest('label')||i).remove());eyes()}
 draw();
 </script></body></html>
