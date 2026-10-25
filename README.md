@@ -21,7 +21,9 @@ Aplikasi web satu file untuk membuat dokumen pertanggungjawaban Dana BOS: BKU, k
 ## Data dan privasi
 - Semua data tersimpan di browser masing-masing pengguna (localStorage). Tidak ada data yang dikirim ke server.
 - Data tidak pindah antar perangkat. Gunakan fitur cadangan di aplikasi sebelum membersihkan cache browser.
-- Satu browser menyediakan 10 slot sekolah yang datanya terpisah.
+- Satu aplikasi dipakai untuk satu sekolah. Pilihan di kiri atas berisi 6 periode: Triwulan 1, Triwulan 2, Triwulan 3, Triwulan 4, Tahap I, dan Tahap II.
+- Identitas sekolah, logo, dan daftar pegawai diisi sekali dan dipakai bersama semua periode. RPD, transaksi, dan BKU terpisah per periode.
+- Data lama dari versi 10 slot otomatis dipindahkan: identitas diambil dari slot yang sudah terisi, slot 1 sampai 6 menjadi periode di atas, dan slot 7 sampai 10 disembunyikan tanpa dihapus.
 
 ## Penyesuaian daerah
 - Dasar hukum, format nomor surat, dan jam kerja pada pengaturan SPK bisa diedit sesuai daerah.
