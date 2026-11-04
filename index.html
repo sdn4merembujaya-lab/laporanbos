@@ -57,6 +57,23 @@ header h1{font-size:21px}header small{display:block;opacity:.9;font-size:13px;ma
 .v-sek .card button.p,.v-pen .card button.p{background:var(--ac);border-color:var(--ac);color:#fff}
 .v-pen th{background:color-mix(in srgb,var(--ac) 16%,var(--c));color:color-mix(in srgb,var(--ac) 70%,var(--t))}.v-pen tr:nth-child(even) td{background:color-mix(in srgb,var(--ac) 5%,transparent)}.v-pen table{border-radius:10px;margin-top:6px}
 @media(max-width:820px){.v-sek .card,.v-pen .card{padding:14px 14px;margin-bottom:16px}}
+
+body.au header,body.au nav{display:none}body.au main{max-width:none;padding:0}
+.lw{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(115deg,#fff 0 44%,#1b5560 44% 100%);position:relative;overflow:hidden;color:#1d2430}
+.lw:after{content:"";position:absolute;right:0;bottom:0;width:30%;height:42%;background:#1f8a94}
+.lb{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:900px;min-height:440px;background:#fff;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.18);overflow:hidden}
+.li{padding:24px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(90deg,#fff,#fffdf0)}
+.li svg{width:100%;max-width:280px;height:auto}.li h2{margin:8px 0 4px;font-size:18px;color:#1b5560}.li p{margin:0;color:#667085;font-size:13px;max-width:280px}
+.lr{background:#1b5560;display:grid;place-items:center;padding:24px}
+.lf{background:#fff;border-radius:6px;padding:16px;width:100%;max-width:340px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.lf label{color:#475467}.lf input{background:#f2f4f7;border-color:#e4e7ec;color:#1d2430;margin-top:3px}
+.lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;border-bottom:1px solid #eef0f3;padding-bottom:8px;font-size:12px}
+.lk{border:0;background:none;color:#1b5560;padding:0;margin:0;font-size:12px}
+.tb{display:flex;gap:4px;background:#f2f4f7;border-radius:8px;padding:3px;margin-bottom:10px}.tb button{flex:1;border:0;background:none;color:#475467;margin:0;padding:7px}.tb button.on{background:#fff;color:#1b5560;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.lf label{margin-top:8px}.lf .eye{background:none;border:0;color:#1b5560;padding:2px 0;margin:0}
+.sb{width:100%;margin:12px 0 0;padding:10px;background:#1b5560;color:#fff;border:0;font-weight:700;letter-spacing:.05em;border-radius:5px}
+.lf .am{margin:8px 0 0;min-height:1em}.lf small{display:block;text-align:center;color:#667085;margin-top:8px}
+@media(max-width:700px){.lb{grid-template-columns:1fr}.li{display:none}.lw{background:#1b5560}.lw:after{display:none}.lr{padding:16px}}
 </style></head><body>
 <header><div><h1>Aplikasi Laporan BOS</h1><small>BKU, Kwitansi, Invois, BAST, SPPD, Surat Tugas dan Laporan, dari RPD</small></div><div id="who"></div></header>
 <nav id="nav"></nav><main id="m"></main><div id="pv"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="akses.js"></script>
@@ -239,7 +256,7 @@ const tp=v=>E(String(v||'').toLowerCase().replace(/(^|[\s\-\/(])([a-z])/g,(m,a,b
 function ttdFix(root){root.querySelectorAll('.ttd').forEach(t=>{const pp=t.previousElementSibling;if(!pp||pp.tagName!='P'||!/text-align:\s*right/.test(pp.getAttribute('style')||''))return;if(!/,\s*(\d{1,2}\s+\S+\s+\d{4}|\.{3,})/.test(pp.textContent))return;const c=[...t.children];let last=-1;c.forEach((d,i)=>{if(d.innerHTML.trim())last=i});if(last<0)return;c.forEach((d,i)=>{if(i==last)d.innerHTML='<span style="white-space:nowrap">'+pp.innerHTML+'</span><br>'+d.innerHTML;else if(d.innerHTML.trim())d.innerHTML='&nbsp;<br>'+d.innerHTML});pp.remove()})}
 const cvh=()=>+S.s.cvh||(PG.k=='F4'?245:205),cvg=()=>Math.max(6,Math.round((cvh()-128)/4));
 const TABS={rg:'Ringkasan',sek:'Data Sekolah',pgw:'Daftar Pegawai',rpd:'RPD dan Realisasi',trx:'Transaksi dan Dokumen',pen:'Daftar Penerima',bku:'BKU',lap:'Laporan BOS'};let V='rg';
-const AK='bos_auth',ADM=['sek','pgw'];
+const AK='bos_auth',ADM=['sek','pgw','sch'];
 function sha(s){const b=new TextEncoder().encode(s),l=b.length,n=((l+9+63)>>6)<<6,w=new Uint8Array(n),v=new DataView(w.buffer);w.set(b);w[l]=128;v.setUint32(n-8,Math.floor(l*8/4294967296));v.setUint32(n-4,(l*8)>>>0);
 const K=[],H=[],fr=x=>((x-Math.floor(x))*4294967296)|0,rr=(x,k)=>(x>>>k)|(x<<(32-k));let p=2,c=0;
 for(;c<64;p++){let q=1;for(let d=2;d*d<=p;d++)if(p%d==0){q=0;break}if(q){if(c<8)H[c]=fr(Math.sqrt(p));K[c]=fr(Math.cbrt(p));c++}}
@@ -251,8 +268,9 @@ H[0]=(H[0]+a)|0;H[1]=(H[1]+b2)|0;H[2]=(H[2]+c2)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|
 return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}
 const nrm=s=>String(s||'').toLowerCase().replace(/\s+/g,' ').trim();
 const AKS=window.AKSES||null;
-const okS=u=>!!(AKS&&Array.isArray(AKS.sekolah)&&AKS.sekolah.includes(sha('bos|'+nrm(u))));
-const msgS=()=>AKS?'Nama sekolah belum terdaftar. Hubungi Admin pengelola aplikasi untuk didaftarkan.':'File akses.js tidak ditemukan. Hubungi Admin pengelola aplikasi.';
+const getSch=()=>{try{return JSON.parse(localStorage.getItem('bos_sch'))||[]}catch(e){return[]}},putSch=a=>{try{localStorage.setItem('bos_sch',JSON.stringify(a));return 1}catch(e){return 0}};
+const okS=u=>!!(AKS&&Array.isArray(AKS.sekolah)&&AKS.sekolah.includes(sha('bos|'+nrm(u))))||getSch().some(x=>x.n==nrm(u));
+const msgS=()=>'Sekolah belum terdaftar. Hubungi Admin untuk didaftarkan.';
 const getA=()=>{try{return JSON.parse(localStorage.getItem(AK))}catch(e){return null}};
 const putA=a=>{try{localStorage.setItem(AK,JSON.stringify(a));return 1}catch(e){return 0}};
 let ROLE=null;try{ROLE=getA()?sessionStorage.getItem('bos_role'):null;if(ROLE!='a'&&ROLE!='b')ROLE=null}catch(e){}
@@ -263,41 +281,50 @@ let h1=5381,h2=52711;const s=salt+p;for(let r=0;r<2000;r++)for(let i=0;i<s.lengt
 const hm=h=>h&&h[0]=='w'?'w':'p';
 const setM=(t,ok)=>{const e=$('#am');if(e){e.textContent=t;e.style.color=ok?'#0f766e':'#b42318'}};
 let FL_=0,FT_=0;
-function authView(){$('#nav').innerHTML='';$('#who').innerHTML='';const A=getA();
-$('#m').innerHTML=A?`<div class="card" style="max-width:380px;margin:30px auto"><b>Masuk</b><p style="color:var(--m);margin:4px 0 8px">Bendahara masuk dengan nama sekolah sebagai username. Admin memakai username Admin.</p><label>Username<input id="lu" autocomplete="username" onkeydown="if(event.key=='Enter')$('#lp').focus()"></label><label>Password<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')dologin()"></label><p style="margin:10px 0 0"><button class="p" onclick="dologin()">Masuk</button></p><p id="am" style="margin:8px 0 0"></p></div>`
-:`<div class="card" style="max-width:460px;margin:30px auto"><b>Pengaturan awal akun</b><p style="color:var(--m);margin:4px 0 8px">Buat akun untuk Admin dan Bendahara. Catat password Anda: jika Admin lupa password, akun hanya bisa diatur ulang dengan menghapus data aplikasi di browser, jadi cadangkan data secara berkala.</p><b>Admin</b><label>Username<input id="su_a" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_a" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_a" type="password" autocomplete="new-password"></label><p style="margin:12px 0 0"><b>Bendahara</b></p><label>Username (nama sekolah yang terdaftar, mis. SDN 1 Merembu)<input id="su_b" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_b" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_b" type="password" autocomplete="new-password"></label><p style="margin:10px 0 0"><button class="p" onclick="dosetup()">Simpan dan masuk</button></p><p id="am" style="margin:8px 0 0"></p></div>`}
-async function dosetup(){const g=i=>$('#'+i).value,o={};
-for(const r of ['a','b']){const u=g('su_'+r).trim(),p=g('sp_'+r),q=g('sq_'+r);
-if(u.length<3)return setM('Username '+(r=='a'?'Admin':'Bendahara')+' minimal 3 karakter.');
-if(r=='b'&&!okS(u))return setM(msgS());
-if(p.length<6)return setM('Password '+(r=='a'?'Admin':'Bendahara')+' minimal 6 karakter.');
-if(p!=q)return setM('Ulangi password '+(r=='a'?'Admin':'Bendahara')+' belum sama.');
-const s=rnd();o[r]={u,s,h:await hsh(p,s)}}
-if(o.a.u.toLowerCase()==o.b.u.toLowerCase())return setM('Username Admin dan Bendahara tidak boleh sama.');
-if(!putA(o))return setM('Gagal menyimpan. Pastikan browser mengizinkan penyimpanan data situs.');
-ROLE='a';try{sessionStorage.setItem('bos_role','a')}catch(e){}V='rg';draw()}
+let LR='b';const setLR=r=>{LR=r;draw()};
+const SVGI='<svg viewBox="0 0 260 250"><polygon points="0,40 120,70 120,215 0,235" fill="#fff6b0"/><polygon points="40,60 120,75 120,215 40,225" fill="#ffe36b"/><rect x="118" y="55" width="92" height="170" rx="3" fill="#2a8a94"/><rect x="132" y="70" width="26" height="55" fill="#1b6a74"/><rect x="170" y="70" width="26" height="55" fill="#1b6a74"/><rect x="132" y="140" width="26" height="55" fill="#1b6a74"/><rect x="170" y="140" width="26" height="55" fill="#1b6a74"/><rect x="95" y="224" width="130" height="8" fill="#1b5560"/><circle cx="75" cy="108" r="14" fill="#f2b48c"/><path d="M62 104q13-18 26-2z" fill="#2b2f3a"/><path d="M58 126h34l6 60H52z" fill="#2c6b73"/><path d="M92 132l28 8" stroke="#2c6b73" stroke-width="9" stroke-linecap="round"/><rect x="58" y="186" width="14" height="38" fill="#24505a"/><rect x="78" y="186" width="14" height="38" fill="#24505a"/><rect x="54" y="222" width="22" height="7" rx="3" fill="#6b3d1f"/><rect x="76" y="222" width="22" height="7" rx="3" fill="#6b3d1f"/></svg>';
+const lwrap=h=>`<div class="lw"><div class="lb"><div class="li">${SVGI}<h2>Aplikasi Laporan BOS</h2><p>Kelola RPD, transaksi, BKU, dan laporan BOS sekolah dalam satu tempat.</p></div><div class="lr"><div class="lf">${h}</div></div></div></div>`;
+function authView(){document.body.classList.add('au');$('#nav').innerHTML='';$('#who').innerHTML='';const A=getA();
+$('#m').innerHTML=A?lwrap(`<div class="lh"><b>SUDAH TERDAFTAR</b><button type="button" class="lk" onclick="alert('Hubungi Admin pengelola aplikasi untuk mendaftarkan sekolah atau mengatur ulang password.')">Butuh bantuan?</button></div><div class="tb"><button type="button" class="${LR=='b'?'on':''}" onclick="setLR('b')">Pengguna</button><button type="button" class="${LR=='a'?'on':''}" onclick="setLR('a')">Admin</button></div><label>${LR=='a'?'Username Admin':'Nama sekolah'}<input id="lu" autocomplete="username" onkeydown="if(event.key=='Enter')$('#lp').focus()"></label><label>Password<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')dologin()"></label><button class="sb" onclick="dologin()">MASUK</button><p id="am" class="am"></p><small>${LR=='b'?'Belum terdaftar? Hubungi Admin untuk didaftarkan.':'Khusus pengelola aplikasi.'}</small>`)
+:lwrap(`<div class="lh"><b>PENGATURAN AWAL ADMIN</b></div><p style="color:#667085;font-size:12px;margin:0">Buat akun Admin. Setelah masuk, Admin mendaftarkan sekolah yang boleh mengakses. Catat password Anda dan cadangkan data secara berkala.</p><label>Username Admin<input id="su_a" autocomplete="off"></label><label>Password (minimal 6 karakter)<input id="sp_a" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_a" type="password" autocomplete="new-password"></label><button class="sb" onclick="dosetup()">BUAT AKUN ADMIN</button><p id="am" class="am"></p>`)}
+async function dosetup(){const g=i=>$('#'+i).value,u=g('su_a').trim(),p=g('sp_a'),q=g('sq_a');
+if(u.length<3)return setM('Username Admin minimal 3 karakter.');
+if(p.length<6)return setM('Password Admin minimal 6 karakter.');
+if(p!=q)return setM('Ulangi password belum sama.');
+const s=rnd();if(!putA({a:{u,s,h:await hsh(p,s)}}))return setM('Gagal menyimpan. Pastikan browser mengizinkan penyimpanan data situs.');
+ROLE='a';try{sessionStorage.setItem('bos_role','a')}catch(e){}V='sch';draw()}
 async function dologin(){if(Date.now()<FT_)return setM('Terlalu banyak percobaan. Coba lagi dalam '+Math.ceil((FT_-Date.now())/1000)+' detik.');
-const u=nrm($('#lu').value),p=$('#lp').value,A=getA();
-for(const r of ['a','b']){if(nrm(A[r].u)==u&&await hsh(p,A[r].s,hm(A[r].h))==A[r].h){if(r=='b'&&!okS(A[r].u))return setM(msgS());FL_=0;ROLE=r;try{sessionStorage.setItem('bos_role',r)}catch(e){}V='rg';draw();return}}
+const u=nrm($('#lu').value),p=$('#lp').value,A=getA();let ok=0,sc='';
+if(LR=='a'){if(nrm(A.a.u)==u&&await hsh(p,A.a.s,hm(A.a.h))==A.a.h)ok='a'}
+else{const x=getSch().find(x=>x.n==u);if(x&&await hsh(p,x.s,hm(x.h))==x.h){ok='b';sc=x.n}}
+if(ok){FL_=0;ROLE=ok;try{sessionStorage.setItem('bos_role',ok);sessionStorage.setItem('bos_sc',sc)}catch(e){}V=ok=='a'?'sch':'rg';draw();return}
 if(++FL_>=5){FL_=0;FT_=Date.now()+30000}setM('Username atau password salah.')}
-function lo(){ROLE=null;try{sessionStorage.removeItem('bos_role')}catch(e){}draw()}
-TABS.akun='Akun dan Keamanan';
+function lo(){ROLE=null;try{sessionStorage.removeItem('bos_role');sessionStorage.removeItem('bos_sc')}catch(e){}draw()}
+TABS.akun='Akun dan Keamanan';TABS.sch='Sekolah Terdaftar';
 VW.akun=()=>{const A=getA();
-if(ROLE=='a')return ['a','b'].map(r=>`<div class="card"><b>Akun ${r=='a'?'Admin':'Bendahara'}</b><div class="g" style="margin-top:8px"><label>Username<input id="au_${r}" value="${E(A[r].u)}" autocomplete="off"></label><label>Password baru (kosongkan jika tidak diganti)<input id="ap_${r}" type="password" autocomplete="new-password"></label><label>Ulangi password baru<input id="aq_${r}" type="password" autocomplete="new-password"></label></div><p style="margin:8px 0 0"><button class="p" onclick="sacc('${r}')">Simpan akun ${r=='a'?'Admin':'Bendahara'}</button></p></div>`).join('')+`<p id="am" style="margin:8px 0"></p><div class="card"><b>Hak akses</b><p style="color:var(--m);margin:4px 0">Admin: semua menu, termasuk Data Sekolah, Daftar Pegawai, impor RPD, pemulihan data, dan pengaturan akun. Bendahara: RPD dan Realisasi, Transaksi dan Dokumen, Daftar Penerima, BKU, dan Laporan BOS (tanpa impor RPD).</p></div>`;
+if(ROLE=='a')return `<div class="card" style="max-width:520px"><b>Akun Admin</b><div class="g" style="margin-top:8px"><label>Username<input id="au_a" value="${E(A.a.u)}" autocomplete="off"></label><label>Password baru (kosongkan jika tidak diganti)<input id="ap_a" type="password" autocomplete="new-password"></label><label>Ulangi password baru<input id="aq_a" type="password" autocomplete="new-password"></label></div><p style="margin:8px 0 0"><button class="p" onclick="sacc()">Simpan akun Admin</button></p><p id="am" style="margin:8px 0 0"></p></div><div class="card"><b>Hak akses</b><p style="color:var(--m);margin:4px 0">Admin: semua menu, termasuk Sekolah Terdaftar, Data Sekolah, Daftar Pegawai, impor RPD, pemulihan data, dan pengaturan akun. Pengguna (sekolah): RPD dan Realisasi, Transaksi dan Dokumen, Daftar Penerima, BKU, dan Laporan BOS (tanpa impor RPD).</p></div>`;
 return `<div class="card" style="max-width:420px"><b>Ubah password saya</b><div style="margin-top:8px"><label>Password saat ini<input id="ao" type="password" autocomplete="current-password"></label><label>Password baru (minimal 6 karakter)<input id="ap" type="password" autocomplete="new-password"></label><label>Ulangi password baru<input id="aq" type="password" autocomplete="new-password"></label></div><p style="margin:8px 0 0"><button class="p" onclick="spw()">Simpan password</button></p><p id="am" style="margin:8px 0 0"></p></div>`};
-async function sacc(r){const A=getA(),u=$('#au_'+r).value.trim(),p=$('#ap_'+r).value,q=$('#aq_'+r).value,x=r=='a'?'b':'a';
+VW.sch=()=>{const L=getSch();return `<div class="card" style="max-width:520px"><b>Daftarkan sekolah baru</b><p style="color:var(--m);margin:4px 0 8px">Hanya sekolah yang didaftarkan di sini yang bisa masuk sebagai Pengguna, memakai nama sekolah dan password di bawah.</p><div class="g"><label>Nama sekolah<input id="sn" placeholder="mis. SDN 1 Merembu" autocomplete="off"></label><label>Password awal (minimal 6 karakter)<input id="spn" type="password" autocomplete="new-password"></label></div><p style="margin:8px 0 0"><button class="p" onclick="addSch()">Tambah sekolah</button></p><p id="am" style="margin:8px 0 0"></p></div><div class="card"><b>Sekolah terdaftar (${L.length})</b>${L.length?`<div class="w"><table style="margin-top:8px"><tr><th>No</th><th>Nama sekolah</th><th>Aksi</th></tr>${L.map((x,i)=>`<tr><td>${i+1}</td><td>${E(x.d)}</td><td><button onclick="rstSch(${i})">Reset password</button><button onclick="delSch(${i})">Hapus</button></td></tr>`).join('')}</table></div>`:'<p style="color:var(--m);margin:6px 0 0">Belum ada sekolah terdaftar.</p>'}</div>`};
+async function addSch(){const d=$('#sn').value.trim().replace(/\s+/g,' '),p=$('#spn').value,L=getSch(),n=nrm(d);
+if(d.length<3)return setM('Nama sekolah minimal 3 karakter.');
+if(p.length<6)return setM('Password minimal 6 karakter.');
+if(L.some(x=>x.n==n))return setM('Sekolah ini sudah terdaftar.');
+const s=rnd();L.push({n,d,s,h:await hsh(p,s)});putSch(L)?(draw(),setM('Sekolah "'+d+'" didaftarkan.',1)):setM('Gagal menyimpan.')}
+async function rstSch(i){const L=getSch(),x=L[i];if(!x)return;const p=prompt('Password baru untuk '+x.d+' (minimal 6 karakter):');if(p===null)return;
+if(p.length<6)return setM('Password minimal 6 karakter.');x.s=rnd();x.h=await hsh(p,x.s);putSch(L)?(draw(),setM('Password '+x.d+' diatur ulang.',1)):setM('Gagal menyimpan.')}
+function delSch(i){const L=getSch(),x=L[i];if(!x||!confirm('Hapus akses sekolah "'+x.d+'"?'))return;L.splice(i,1);putSch(L);draw()}
+async function sacc(){const A=getA(),u=$('#au_a').value.trim(),p=$('#ap_a').value,q=$('#aq_a').value;
 if(u.length<3)return setM('Username minimal 3 karakter.');
-if(u.toLowerCase()==A[x].u.toLowerCase())return setM('Username tidak boleh sama dengan akun lain.');
-if(r=='b'&&!okS(u))return setM(msgS());
-if(p||q){if(p.length<6)return setM('Password baru minimal 6 karakter.');if(p!=q)return setM('Ulangi password belum sama.');A[r].s=rnd();A[r].h=await hsh(p,A[r].s)}
-A[r].u=u;putA(A)?(draw(),setM('Akun '+(r=='a'?'Admin':'Bendahara')+' disimpan.',1)):setM('Gagal menyimpan.')}
-async function spw(){const A=getA(),o=$('#ao').value,p=$('#ap').value,q=$('#aq').value;
-if(await hsh(o,A.b.s,hm(A.b.h))!=A.b.h)return setM('Password saat ini salah.');
+if(p||q){if(p.length<6)return setM('Password baru minimal 6 karakter.');if(p!=q)return setM('Ulangi password belum sama.');A.a.s=rnd();A.a.h=await hsh(p,A.a.s)}
+A.a.u=u;putA(A)?(draw(),setM('Akun Admin disimpan.',1)):setM('Gagal menyimpan.')}
+async function spw(){let n='';try{n=sessionStorage.getItem('bos_sc')||''}catch(e){}const L=getSch(),x=L.find(z=>z.n==n),o=$('#ao').value,p=$('#ap').value,q=$('#aq').value;
+if(!x)return setM('Akun sekolah tidak ditemukan.');
+if(await hsh(o,x.s,hm(x.h))!=x.h)return setM('Password saat ini salah.');
 if(p.length<6)return setM('Password baru minimal 6 karakter.');if(p!=q)return setM('Ulangi password belum sama.');
-A.b.s=rnd();A.b.h=await hsh(p,A.b.s);putA(A)?(draw(),setM('Password disimpan.',1)):setM('Gagal menyimpan.')}
+x.s=rnd();x.h=await hsh(p,x.s);putSch(L)?(draw(),setM('Password disimpan.',1)):setM('Gagal menyimpan.')}
 
 const rpT=a=>(a.R||[]).reduce((t,r)=>t+r[4]*r[6],0),rlT=a=>a.tx.reduce((t,x)=>t+ +x.jml,0),pc=(a,b)=>b>0?Math.min(100,Math.round(a/b*100)):0;
-const IC={rg:'<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>',sek:'<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',pgw:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4 1.8 4 4"/>',rpd:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',trx:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h6"/>',pen:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',bku:'<path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h12"/>',lap:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',akun:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'},ic=k=>`<svg viewBox="0 0 24 24">${IC[k]||''}</svg>`,
+const IC={rg:'<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>',sek:'<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',pgw:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4 1.8 4 4"/>',rpd:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',trx:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h6"/>',pen:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',bku:'<path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h12"/>',lap:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',akun:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'},ic=k=>`<svg viewBox="0 0 24 24">${IC[k]||IC.sek}</svg>`,
 cm=n=>n>=1e9?(n/1e9).toFixed(1)+' M':n>=1e6?(n/1e6).toFixed(1)+' jt':n>=1e3?Math.round(n/1e3)+' rb':String(Math.round(n)),
 PAL=['#0f766e','#ea580c','#2563eb','#ca8a04','#9333ea','#dc2626','#0891b2','#65a30d'],BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 const mo=()=>{const m=Array(12).fill(0),c=Array(12).fill(0);S.tx.forEach(t=>{const k=+String(t.tgl||'').slice(5,7)-1;if(k>=0&&k<12){m[k]+=+t.jml||0;c[k]++}});return[m,c]};
@@ -314,6 +341,6 @@ return `<div style="margin-bottom:12px"><h2 style="margin:0">Ringkasan</h2><div 
 <div class="card" style="margin-top:12px"><b>Progres realisasi per standar</b>${sn.length?sn.map(x=>{const q=pc(x[2],x[1]);return `<div class="pb"><div><span>${E(x[0])}</span><b>${q}%</b></div><div class="bar2" style="margin:4px 0"><i style="width:${q}%"></i></div><small>Rp ${rp(x[2])} dari Rp ${rp(x[1])}</small></div>`}).join(''):'<div class="chip" style="margin-top:6px">Belum ada RPD.</div>'}</div>
 <div class="card"><b>Semua periode</b><table style="margin-top:8px"><tr><th>Periode</th><th class="r">RPD</th><th class="r">Realisasi</th><th class="r">%</th></tr>${SL.map((n,i)=>{const a=ALL[i],x=rpT(a),y=rlT(a);return `<tr><td><a href="#" onclick="sw(${i});return false">${n}</a></td><td class="r">${rp(x)}</td><td class="r">${rp(y)}</td><td class="r">${pc(y,x)}%</td></tr>`}).join('')}</table></div>`};
 function eyes(){document.querySelectorAll('#m input[type=password]').forEach(i=>{if(i.dataset.e)return;i.dataset.e=1;const b=document.createElement('button');b.type='button';b.className='eye';b.textContent='Lihat';b.onclick=()=>{const h=i.type=='password';i.type=h?'text':'password';b.textContent=h?'Sembunyi':'Lihat'};i.after(b)})}
-function draw(){try{renum()}catch(e){}if(window.__r!==ROLE){window.__r=ROLE;scrollTo(0,0)}if(!ROLE){authView();eyes();return}HP=0;const al=Object.entries(TABS).filter(([k])=>ROLE=='a'||!ADM.includes(k));if(!al.some(([k])=>k==V))V='rg';$('#who').innerHTML=`<div class="us"><div class="av">${E((S.s.sekk||S.s.sek||(ROLE=='a'?'A':'B')).replace(/^(SD\s+Negeri|SDN|SD)\s*\d*\s*/i,'').charAt(0).toUpperCase())}</div><div class="ui"><b>${E(S.s.sekk||S.s.sek||'Sekolah belum diisi')}</b><span>${SL[CUR]}<em class="th" style="font-style:normal"> · Tahun ${E(S.s.tahun)}</em></span></div><span class="rl">${ROLE=='a'?'Admin':'Bendahara'}</span><button onclick="lo()">Keluar</button></div>`;$('#nav').innerHTML=`<div class="pl">Periode</div><select style="padding:6px;border-radius:7px" onchange="sw(+this.value)">${SL.map((n,i)=>`<option value="${i}" ${i==CUR?'selected':''}>${n}</option>`).join('')}</select><div class="pl">Menu</div>`+al.map(([k,v])=>`<button class="${k==V?'on':''}" onclick="V='${k}';draw()">${ic(k)}<span>${v}</span></button>`).join('');$('#m').innerHTML=VW[V]();$('#m').className='v-'+V;if(ROLE!='a')$('#m').querySelectorAll('input[type=file]').forEach(i=>(i.closest('label')||i).remove());eyes()}
+function draw(){try{renum()}catch(e){}if(window.__r!==ROLE){window.__r=ROLE;scrollTo(0,0)}if(!ROLE){authView();eyes();return}document.body.classList.remove('au');HP=0;const al=Object.entries(TABS).filter(([k])=>ROLE=='a'||!ADM.includes(k));if(!al.some(([k])=>k==V))V='rg';$('#who').innerHTML=`<div class="us"><div class="av">${E((S.s.sekk||S.s.sek||(ROLE=='a'?'A':'B')).replace(/^(SD\s+Negeri|SDN|SD)\s*\d*\s*/i,'').charAt(0).toUpperCase())}</div><div class="ui"><b>${E(S.s.sekk||S.s.sek||'Sekolah belum diisi')}</b><span>${SL[CUR]}<em class="th" style="font-style:normal"> · Tahun ${E(S.s.tahun)}</em></span></div><span class="rl">${ROLE=='a'?'Admin':'Bendahara'}</span><button onclick="lo()">Keluar</button></div>`;$('#nav').innerHTML=`<div class="pl">Periode</div><select style="padding:6px;border-radius:7px" onchange="sw(+this.value)">${SL.map((n,i)=>`<option value="${i}" ${i==CUR?'selected':''}>${n}</option>`).join('')}</select><div class="pl">Menu</div>`+al.map(([k,v])=>`<button class="${k==V?'on':''}" onclick="V='${k}';draw()">${ic(k)}<span>${v}</span></button>`).join('');$('#m').innerHTML=VW[V]();$('#m').className='v-'+V;if(ROLE!='a')$('#m').querySelectorAll('input[type=file]').forEach(i=>(i.closest('label')||i).remove());eyes()}
 draw();
 </script></body></html>
