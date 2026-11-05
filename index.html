@@ -98,6 +98,8 @@ nav{background:rgba(18,14,96,.55)}nav button.on,button.p{background:linear-gradi
 /* baris buku seragam 2 baris */
 .paper .bkut{line-height:1.35}.paper .bkut tr.r2{height:calc(2.7em + 7px)}.paper .bkut tr.r2 td{vertical-align:middle}
 .xl+.xl{margin-left:8px}
+/* cetak: latar putih, tanda tangan tidak terpotong */
+@media print{html,body{background:#fff!important;min-height:0!important;color:#000!important}.ttd{break-inside:avoid;page-break-inside:avoid}.paper table tr{break-inside:avoid;page-break-inside:avoid}}
 /* ringkasan hidup */
 #who{display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px}.pw{display:flex;align-items:center;gap:10px;margin:0;color:#c9ccff;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}.pw select{width:auto;padding:10px 14px;border:0;border-radius:14px;background:#fff;color:#1d2430;font:inherit;font-size:15px;font-weight:600;letter-spacing:0;text-transform:none;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .xl{margin-top:14px;padding:9px 16px;border-radius:99px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;font-weight:700;cursor:pointer;backdrop-filter:blur(4px);position:relative;z-index:1;transition:transform .2s,background .2s}.xl:hover{background:rgba(255,255,255,.28);transform:translateY(-2px)}
