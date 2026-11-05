@@ -120,8 +120,8 @@ const bkRange=()=>{const[t,v]=pr_().split(':'),y=+S.s.tahun||new Date().getFullY
 const bkd=()=>{const u=(a)=>[...new Set(a.filter(Boolean))],j=a=>u(a).map(E).join('<br>');
 const tx=S.tx.map(t=>{const L=t.m||[[t.i,+t.jml]];return {d:t.tgl,no:noS(t),sn:j(L.map(x=>SNP[R[x[0]][0]])),rk:j(L.map(x=>R[x[0]][2])),nr:j(L.map(x=>krn(R[x[0]][2],R[x[0]][3]))),u:E(t.ur||L.map(x=>R[x[0]][3]).join('; ')),a:0,b:+t.jml,o:3}});
 const e=[...S.rec.map(r=>({d:r.tgl,no:'',sn:'',rk:'4.1.4.24.1a',nr:KR['4.1.4.24.1a'],u:r.uraian||'Penerimaan dana BOS',a:+r.jml,b:0,o:0})),...tx];
-const sm={};tx.forEach(x=>{if(x.d&&x.b)sm[x.d]=(sm[x.d]||0)+x.b});
-Object.keys(sm).forEach(d=>{e.push({d,no:'auto',sn:'',rk:'4.1.4.24.2',nr:KR['4.1.4.24.2'],u:'Tarik Tunai',a:0,b:sm[d],o:1});e.push({d,no:'auto',sn:'',rk:'4.1.4.24.3',nr:KR['4.1.4.24.3'],u:'Pergeseran Uang di Bank',a:sm[d],b:0,o:2})});
+const dana=S.rec.reduce((q,r)=>q+(+r.jml||0),0),dr=S.rec.map(r=>r.tgl).filter(Boolean).sort().pop()||'',dt=tx.map(x=>x.d).filter(Boolean).sort()[0]||'',dw=dt&&dt>dr?dt:dr;
+if(dana>0&&dw){e.push({d:dw,no:'auto',sn:'',rk:'4.1.4.24.2',nr:KR['4.1.4.24.2'],u:'Tarik Tunai',a:0,b:dana,o:1});e.push({d:dw,no:'auto',sn:'',rk:'4.1.4.24.3',nr:KR['4.1.4.24.3'],u:'Pergeseran Uang di Bank',a:dana,b:0,o:2})}
 e.forEach((x,i)=>x.i=i);e.sort((x,y)=>(x.d||'').localeCompare(y.d||'')||x.o-y.o||x.i-y.i);
 const rg=bkRange(),c='border:1px solid #000;',mt='color:#000;',th=(x,w)=>`<th style="${c}${mt}background:#99ffcc;text-align:center;vertical-align:middle;padding:6px 3px;${w?'width:'+w:''}">${x}</th>`,N10=[1,2,3,4,5,6,7,8,9,10].map(n=>`<td style="${c}background:#404040;color:#fff;text-align:center;font-style:italic;font-weight:bold;padding:1px">${n}</td>`).join(''),sm9='font-size:8.5pt;',nr=x=>x?rp(x):'-',G=' class="bkg"';
 let s=0,A=0,B=0;
