@@ -76,8 +76,26 @@ body.au header,body.au nav{display:none}body.au main{max-width:none;padding:0}
 .sb{width:100%;margin:12px 0 0;padding:10px;background:#1b5560;color:#fff;border:0;font-weight:700;letter-spacing:.05em;border-radius:5px}
 .lf .am{margin:8px 0 0;min-height:1em}.lf small{display:block;text-align:center;color:#667085;margin-top:8px}
 @media(max-width:700px){.lb{grid-template-columns:1fr}.li{display:none}.lw{background:#1b5560}.lw:after{display:none}.lr{padding:16px}}
+
+:root:root:root{--bg:#0c0a3a;--c:#16126b;--b:#3d3bb0;--t:#eef0ff;--m:#aeb3ee;--a:#6c4dff;--bd:#4b4ab8;--gr:#17306a}
+body{background:linear-gradient(165deg,#07062b 0%,#14106b 55%,#33109a 100%) fixed;color:var(--t);min-height:100vh}
+header{background:rgba(18,14,96,.7);backdrop-filter:blur(8px);border-bottom:1px solid #3d3bb0}
+nav{background:rgba(18,14,96,.55)}nav button.on,button.p{background:linear-gradient(90deg,#1ab8ff,#7b3dff);border-color:transparent}
+.lw{background:radial-gradient(circle at 50% -10%,#3b27c8 0,transparent 55%),linear-gradient(170deg,#07062b,#171069 55%,#3a12a0);color:#fff}
+.lw:after{display:block;left:0;right:0;width:100%;height:32%;background:radial-gradient(110% 100% at 50% 125%,rgba(150,70,255,.55),rgba(40,110,255,.25) 45%,transparent 70%)}
+.lb{grid-template-columns:1fr;max-width:380px;min-height:0;background:transparent;box-shadow:none;border-radius:0;overflow:visible}
+.li{display:flex!important;background:none;padding:0 0 6px}.li svg{max-width:150px}.li h2{color:#fff;font-size:26px;margin:4px 0 12px}
+.lr{background:none;padding:0!important}
+.lf{background:rgba(24,20,110,.55);border:1px solid #5a55e6;backdrop-filter:blur(10px);border-radius:18px;box-shadow:0 0 34px rgba(90,80,255,.4);max-width:none;padding:18px;color:#fff}
+.lf label{color:#c9ccff}.lf input{background:rgba(16,14,90,.75);border:1px solid #5a55e6;border-radius:12px;color:#fff;padding:12px}
+.lf input:focus{outline:0;border-color:#59d4ff;box-shadow:0 0 10px #59d4ff77}
+.lh{border-bottom-color:#3d3bb0;color:#c9ccff}.lk,.lf .eye{color:#8fd8ff}
+.tb{background:rgba(10,8,70,.65)}.tb button{color:#c9ccff}.tb button.on{background:#4b3df0;color:#fff;box-shadow:none}
+.sb{background:linear-gradient(90deg,#17c9ff,#8b3dff);border-radius:30px;padding:13px;font-size:15px;box-shadow:0 0 20px rgba(77,124,255,.55)}
+.lf small,.lf .am{color:#aeb3ee}
+@media(max-width:700px){.lw{background:radial-gradient(circle at 50% -10%,#3b27c8 0,transparent 55%),linear-gradient(170deg,#07062b,#171069 55%,#3a12a0)}.lw:after{display:block}}
 </style></head><body>
-<header><div><h1>Aplikasi Laporan BOS</h1><small>BKU, Kwitansi, Invois, BAST, SPPD, Surat Tugas dan Laporan, dari RPD</small></div><div id="who"></div></header>
+<header><div><h1>Aplikasi Laporan BOS</h1></div><div id="who"></div></header>
 <nav id="nav"></nav><main id="m"></main><div id="pv"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 let SNP=[],G=[],R=[];
@@ -324,8 +342,8 @@ const hm=h=>h&&h[0]=='w'?'w':'p';
 const setM=(t,ok)=>{const e=$('#am');if(e){e.textContent=t;e.style.color=ok?'#0f766e':'#b42318'}};
 let FL_=0,FT_=0;
 let LR='b';const setLR=r=>{LR=r;draw()};
-const SVGI='<svg viewBox="0 0 260 250"><polygon points="0,40 120,70 120,215 0,235" fill="#fff6b0"/><polygon points="40,60 120,75 120,215 40,225" fill="#ffe36b"/><rect x="118" y="55" width="92" height="170" rx="3" fill="#2a8a94"/><rect x="132" y="70" width="26" height="55" fill="#1b6a74"/><rect x="170" y="70" width="26" height="55" fill="#1b6a74"/><rect x="132" y="140" width="26" height="55" fill="#1b6a74"/><rect x="170" y="140" width="26" height="55" fill="#1b6a74"/><rect x="95" y="224" width="130" height="8" fill="#1b5560"/><circle cx="75" cy="108" r="14" fill="#f2b48c"/><path d="M62 104q13-18 26-2z" fill="#2b2f3a"/><path d="M58 126h34l6 60H52z" fill="#2c6b73"/><path d="M92 132l28 8" stroke="#2c6b73" stroke-width="9" stroke-linecap="round"/><rect x="58" y="186" width="14" height="38" fill="#24505a"/><rect x="78" y="186" width="14" height="38" fill="#24505a"/><rect x="54" y="222" width="22" height="7" rx="3" fill="#6b3d1f"/><rect x="76" y="222" width="22" height="7" rx="3" fill="#6b3d1f"/></svg>';
-const lwrap=h=>`<div class="lw"><div class="lb"><div class="li">${SVGI}<h2>Aplikasi Laporan BOS</h2><p>Kelola RPD, transaksi, BKU, dan laporan BOS sekolah dalam satu tempat.</p></div><div class="lr"><div class="lf">${h}</div></div></div></div>`;
+const SVGI='<svg viewBox="0 0 160 150"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe9ff"/><stop offset="1" stop-color="#6a4dff"/></linearGradient><linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9f6ff"/><stop offset="1" stop-color="#7fb4ff"/></linearGradient><filter id="lgf" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#lgf)"><path d="M52 66V50a28 28 0 0 1 56 0v16" fill="none" stroke="url(#lg1)" stroke-width="13" stroke-linecap="round"/><rect x="38" y="64" width="84" height="64" rx="16" fill="url(#lg2)"/><circle cx="80" cy="90" r="8" fill="#241a8a"/><rect x="76" y="94" width="8" height="18" rx="4" fill="#241a8a"/><ellipse cx="80" cy="96" rx="68" ry="20" fill="none" stroke="url(#lg1)" stroke-width="3" transform="rotate(-14 80 96)" opacity=".9"/></g></svg>';
+const lwrap=h=>`<div class="lw"><div class="lb"><div class="li">${SVGI}<h2>Aplikasi Laporan BOS</h2></div><div class="lr"><div class="lf">${h}</div></div></div></div>`;
 function authView(){document.body.classList.add('au');$('#nav').innerHTML='';$('#who').innerHTML='';const A=HAS_ADMIN;
 $('#m').innerHTML=A?lwrap(`<div class="lh"><b>SUDAH TERDAFTAR</b><button type="button" class="lk" onclick="alert('Hubungi Admin pengelola aplikasi untuk mendaftarkan sekolah atau mengatur ulang password.')">Butuh bantuan?</button></div><div class="tb"><button type="button" class="${LR=='b'?'on':''}" onclick="setLR('b')">Pengguna</button><button type="button" class="${LR=='a'?'on':''}" onclick="setLR('a')">Admin</button></div><label>${LR=='a'?'Email Admin':'Nama sekolah'}<input id="lu" autocomplete="username" onkeydown="if(event.key=='Enter')$('#lp').focus()"></label><label>Password<input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')dologin()"></label><button class="sb" onclick="dologin()">MASUK</button><p id="am" class="am"></p><small>${LR=='b'?'Belum terdaftar? Hubungi Admin untuk didaftarkan.':'Khusus pengelola aplikasi.'}</small>`)
 :lwrap(`<div class="lh"><b>PENGATURAN AWAL ADMIN</b></div><p style="color:#667085;font-size:12px;margin:0">Buat akun Admin. Data tersimpan di Supabase (cloud). Setelah masuk, Admin mendaftarkan sekolah yang boleh mengakses.</p><label>Email Admin<input id="su_a" type="email" autocomplete="email"></label><label>Password (minimal 6 karakter)<input id="sp_a" type="password" autocomplete="new-password"></label><label>Ulangi password<input id="sq_a" type="password" autocomplete="new-password"></label><button class="sb" onclick="dosetup()">BUAT AKUN ADMIN</button><p id="am" class="am"></p>`)}
