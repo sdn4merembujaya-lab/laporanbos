@@ -113,7 +113,7 @@ const KS=['Mengetahui,<br>Kepala Sekolah',S=>S.s.kep,S=>S.s.nipk];
 const ks=(l)=>[l||'Kepala Sekolah',S.s.kep,S.s.nipk],bn=()=>['Bendahara BOS',S.s.ben,S.s.nipb];
 const tg=t=>`${E(S.s.kota||'..........')}, ${fd(t.tgl)}`;
 const ln=t=>{const h=R[t.i][6],q=t.jml/h;return Number.isInteger(q)&&q>0?[q,h]:[1,+t.jml]};
-const bk=()=>{const e=[...S.rec.map(r=>({d:r.tgl,no:'-',rk:'',u:r.uraian||'Penerimaan dana BOS',a:+r.jml,b:0})),...S.tx.flatMap(t=>(t.m||[[t.i,+t.jml]]).map(([i,a])=>({d:t.tgl,no:t.no,rk:R[i][2],u:R[i][3]+(t.pen?' ('+t.pen+')':''),a:0,b:a})))];e.sort((x,y)=>(x.d||'').localeCompare(y.d||''));let s=0,A=0,B=0;
+const bk=()=>{const e=[...S.rec.map(r=>({d:r.tgl,no:'-',rk:'',u:r.uraian||'Penerimaan dana BOS',a:+r.jml,b:0})),...S.tx.map(t=>{const L=t.m||[[t.i,+t.jml]],rk=[...new Set(L.map(x=>R[x[0]][2]))].join(', ');return {d:t.tgl,no:t.no,rk,u:(t.ur||L.map(x=>R[x[0]][3]).join('; '))+(t.pen?' ('+t.pen+')':''),a:0,b:+t.jml}})];e.sort((x,y)=>(x.d||'').localeCompare(y.d||''));let s=0,A=0,B=0;
 const h=e.map(x=>{s+=x.a-x.b;A+=x.a;B+=x.b;return `<tr><td>${x.d?fd(x.d):''}</td><td>${E(x.no)}</td><td>${x.rk}</td><td>${E(x.u)}</td><td class="r">${x.a?rp(x.a):''}</td><td class="r">${x.b?rp(x.b):''}</td><td class="r">${rp(s)}</td></tr>`}).join('');
 return `<table><tr><th>Tanggal</th><th>No. Bukti</th><th>Kode Rekening</th><th>Uraian</th><th>Penerimaan</th><th>Pengeluaran</th><th>Saldo</th></tr>${h}<tr><th colspan="4">JUMLAH</th><th class="r">${rp(A)}</th><th class="r">${rp(B)}</th><th class="r">${rp(s)}</th></tr></table>`};
 const DOC={
