@@ -632,5 +632,50 @@ VW.dhk=()=>{const L=hdkList(),it=hdkCur(),d=hdkD(it),P=hdkP(d.p),n=hdkN(d,it),gr
 <p style="margin:8px 0 0">${it.e?'':'<button onclick="hdkPeg()">Isi dari Daftar Pegawai</button>'}<button class="p" onclick="O('dhk')">Cetak daftar hadir ini</button><button class="p" onclick="O('dhka')">Cetak semua yang sudah berisi peserta</button><button onclick="hdkKos()">Kosongkan peserta</button></p></div>`};
 (()=>{const e=Object.entries(TABS),i=e.findIndex(x=>x[0]=='bku');e.splice(i<0?e.length:i,0,['dhk','Daftar Hadir Kegiatan']);Object.keys(TABS).forEach(k=>delete TABS[k]);e.forEach(([k,v])=>TABS[k]=v)})();
 
+/* ===== Kelengkapan SPJ per transaksi (ceklis otomatis) ===== */
+IC.spj='<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8l1.5 1.5L12 7M8 14l1.5 1.5L12 13M14 8h3M14 14h3"/>';
+const SPJJ={hon:'Honorarium PTK Non ASN',din:'Perjalanan Dinas',mam:'Makan dan Minum',brg:'Belanja Pengadaan Barang',tkg:'Jasa Tukang',eks:'Jasa Pelatih Ekstrakurikuler',lmb:'Pendaftaran Lomba',smp:'Retribusi / Pengangkutan Sampah',lis:'Langganan Daya dan Jasa',pkt:'Paket Data dan Koran',swa:'Sewa'};
+const KW=['kw','Kwitansi','g','kw'],FT=['ft','Dokumentasi / foto','m'],PJ=['pj','Bukti setor pajak','p'];
+const SPJI={
+hon:[KW,['dh','Daftar penerimaan honor','l',['h','dh']],['sk','SK Kepala Sekolah tentang PTK Non ASN','m'],['hd','Daftar hadir PTK Non ASN','h']],
+din:[KW,['tr','Daftar penerimaan transport','l',['k','dk']],['rs','Rincian SPPD','m'],['sp','SPPD','g','sp'],['st','Surat Perintah Tugas','g','st'],['hd','Daftar hadir peserta','h'],['ud','Surat undangan / dasar pelaksanaan tugas','m'],['lp','Laporan hasil perjalanan dinas','m'],FT],
+mam:[KW,['po','Surat Pesanan','g','po'],['pr','Dokumen perencanaan','m'],['bt','BAST','g','bt'],['nt','Nota berparaf dan bercap basah dari penjual','n'],['ud','Undangan','m'],['nl','Notulen','m'],['hd','Daftar hadir peserta','h'],['tt','Tanda terima konsumsi','m'],FT,PJ],
+brg:[['sl','Bukti transaksi (utamakan SIPLah)','n'],KW,['pr','Dokumen perencanaan pengadaan','m'],['pb','Dokumen hasil perbandingan','m'],['ng','Dokumen hasil negosiasi','m'],['po','Surat pemesanan','g','po'],['bt','Berita acara serah terima','g','bt'],['bb','Bukti pembayaran','n'],['fb','Foto barang (tampak spesifikasi)','m'],PJ],
+tkg:[KW,['dp','Daftar penerimaan jasa tukang','l',['u','du']],['dt','Daftar hadir tukang per hari','l',['u','dht']],['spk','SPK (Surat Perintah Kerja)','g','spk'],['fs','Foto sebelum dan sesudah pemeliharaan','m']],
+eks:[KW,['dp','Daftar penerimaan jasa pelatih','l',['e','de']],['sr','Sertifikat pelatih','n'],['sk','SK Kepala Sekolah penetapan pelatih','m'],['pg','Program kegiatan','m'],['jd','Jadwal latihan','m'],['hd','Daftar hadir pelatih dan siswa','h'],FT,PJ],
+lmb:[KW,['kp','Kwitansi panjang dari panitia lomba','n'],['dp','Daftar penerimaan pendaftaran','m'],['fm','Formulir pendaftaran peserta','m']],
+smp:[KW,['dp','Daftar penerimaan retribusi sampah','l',['s','ds']],['spk','SPK (Surat Perintah Kerja)','g','spk'],['hd','Daftar hadir pengambilan sampah','m'],FT],
+lis:[KW,['sb','Bukti pembayaran (struk)','n'],['pk','Surat perjanjian kerja sama (bila menumpang)','m'],['pg','Pergeseran anggaran bila struk berbeda dari anggaran','m']],
+pkt:[KW,['sb','Bukti pembayaran (struk)','n']],
+swa:[KW,['dp','Daftar penerimaan sewa','m'],['kp','Kwitansi panjang','n'],['spk','SPK (Surat Perintah Kerja)','g','spk'],FT]};
+const SP=()=>S.spj||(S.spj={j:{},m:{}});
+const spjAuto=t=>{const r=R[t.i]||[],u=String(r[3]||''),c=String(r[2]||'');
+ return /ekstrakurikuler|pelatih/i.test(u)?'eks':/makan|minum|konsumsi/i.test(u)?'mam':/perjalanan|sppd|transport/i.test(u)||/^5\.1\.02\.04/.test(c)?'din':/tukang|upah/i.test(u)?'tkg':/sampah|retribusi/i.test(u)?'smp':/paket data|koran|surat kabar/i.test(u)?'pkt':/listrik|air\b|internet|indihome|telepon|daya dan jasa|langganan/i.test(u)?'lis':/sewa/i.test(u)?'swa':/lomba|pendaftaran/i.test(u)?'lmb':/honor/i.test(u)?'hon':'brg'};
+const spjJ=t=>SP().j[t.id]||spjAuto(t);
+const hdkFor=t=>{const gi=(R[t.i]||[])[1],nm=String(G[gi]||'').toLowerCase(),L=hdkList(),kn=KN[kComp(gi)];return L.find(x=>x.n.toLowerCase()==nm)||(kn?L.find(x=>x.k=='k:'+kn):null)};
+const spjEv=(t,it)=>{const kd=it[2],a=it[3];
+ if(kd=='g')return {ok:1,txt:'Lengkap otomatis, bisa dicetak'};
+ if(kd=='l'){const n=ar(a[0]).filter(x=>String(x.n||'').trim()).length;return n?{ok:1,txt:'Lengkap otomatis ('+n+' penerima)'}:{ok:0,txt:'Daftar penerima belum diisi'}}
+ if(kd=='h'){const L=it[0]=='hd'&&spjJ(t)=='eks'?hdkList().filter(x=>x.e):[hdkFor(t)].filter(Boolean),n=L.reduce((s,x)=>s+hdkP(hdkD(x).p).length,0);return n?{ok:1,txt:'Lengkap otomatis ('+n+' peserta)'}:{ok:0,txt:'Daftar peserta belum diisi'}}
+ if(kd=='p'){const no=String(t.no||'');const f=no&&(S.pjk||[]).some(x=>String(x.no)==no||String(x.ur||'').includes(no));return f?{ok:1,txt:'Lengkap otomatis (ada catatan pajak)'}:{ok:0,txt:'Belum ada catatan pajak bernomor bukti ini'}}
+ return {ok:0,txt:kd=='n'?'Berkas dari luar aplikasi':'Belum ada format di aplikasi'}};
+const spjR=t=>(SPJI[spjJ(t)]||[]).map((it,i)=>{const e=spjEv(t,it),m=!!SP().m[t.id+'|'+i];return {i,it,e,m,ok:e.ok||m}});
+window.spjSel=id=>{window.SPJID=id;draw()};
+window.spjSetJ=(id,v)=>{const s=SP();if(v==spjAuto(S.tx.find(x=>x.id==id)))delete s.j[id];else s.j[id]=v;save();draw()};
+window.spjM=(id,i,on)=>{const s=SP();if(on)s.m[id+'|'+i]=1;else delete s.m[id+'|'+i];save();draw()};
+window.spjGo=(id,i)=>{const t=S.tx.find(x=>x.id==id),it=SPJI[spjJ(t)][i],kd=it[2];if(kd=='l')psb(it[3][0]);else if(kd=='p')V='bkp';else if(kd=='h'){const h=spjJ(t)=='eks'?null:hdkFor(t);if(h)HDK().sel=h.k;V='dhk'}draw()};
+DOC.spj=()=>{const t=S.tx.find(x=>x.id==window.SPJID)||S.tx[0];if(!t)return '<p>Belum ada transaksi.</p>';const L=spjR(t);
+ return PBS(0)+kop()+H('DAFTAR PERIKSA KELENGKAPAN SPJ','')+`<table class="nb"><tr><td width="26%">No. bukti</td><td>: ${E(t.no)}</td></tr><tr><td>Tanggal</td><td>: ${t.tgl?fd(t.tgl):'-'}</td></tr><tr><td>Uraian</td><td>: ${E((R[t.i]||[])[3])}</td></tr><tr><td>Jenis belanja</td><td>: ${SPJJ[spjJ(t)]}</td></tr><tr><td>Jumlah</td><td>: Rp ${rp(t.jml)}</td></tr></table><table style="margin-top:10px"><tr><th style="width:5%">No</th><th>Kelengkapan SPJ</th><th style="width:16%">Ada</th></tr>${L.map((x,n)=>`<tr><td style="text-align:center">${n+1}</td><td>${E(x.it[1])}</td><td style="text-align:center">${x.ok?'Ada':'Belum'}</td></tr>`).join('')}</table><p>Lengkap ${L.filter(x=>x.ok).length} dari ${L.length} dokumen.</p>`+sign(ks('Mengetahui,<br>Kepala Sekolah'),bn())};
+VW.spj=()=>{const T=S.tx;if(!T.length)return '<div class="card">Belum ada transaksi. Catat dulu pembayaran di tab RPD dan Realisasi, lalu kelengkapan SPJ-nya diperiksa di sini.</div>';
+ if(!T.some(x=>x.id==window.SPJID))window.SPJID=T[0].id;
+ const rows=T.map(t=>{const L=spjR(t),n=L.filter(x=>x.ok).length,p=Math.round(n*100/L.length);return {t,L,n,p}}),full=rows.filter(x=>x.n==x.L.length).length,cur=rows.find(x=>x.t.id==window.SPJID),t=cur.t;
+ const jopt=k=>Object.keys(SPJJ).map(x=>`<option value="${x}" ${x==k?'selected':''}>${SPJJ[x]}</option>`).join('');
+ const bar=(p)=>`<div style="height:7px;background:#e5e7eb;border-radius:4px;min-width:90px"><div style="width:${p}%;height:7px;border-radius:4px;background:${p==100?'#16a34a':p>=50?'#ca8a04':'#dc2626'}"></div></div>`;
+ return `<h3 style="margin:4px 4px 8px">Kelengkapan SPJ</h3><p style="color:var(--m);margin:0 4px 10px;font-size:12px">Jenis belanja dikenali otomatis dari uraian RPD dan bisa diubah. Dokumen yang bisa dibuat aplikasi atau yang datanya sudah terisi dicentang otomatis. Sisanya centang sendiri bila berkasnya sudah ada. ${full} dari ${rows.length} transaksi sudah lengkap.</p>
+<div class="card w"><table><tr><th>Tgl</th><th>No</th><th>Uraian</th><th>Jenis belanja</th><th>Kelengkapan</th><th></th></tr>${rows.map(x=>`<tr style="${x.t.id==t.id?'background:rgba(22,163,74,.08)':''}"><td>${x.t.tgl?fd(x.t.tgl):'-'}</td><td>${E(x.t.no)}</td><td>${E(x.t.m?'Gabungan':(R[x.t.i]||[])[3])}</td><td><select onchange="spjSetJ(${x.t.id},this.value)">${jopt(spjJ(x.t))}</select></td><td><b>${x.n}/${x.L.length}</b>${bar(x.p)}</td><td><button onclick="spjSel(${x.t.id})">Periksa</button></td></tr>`).join('')}</table></div>
+<div class="card w"><b>No. ${E(t.no)} · ${SPJJ[spjJ(t)]}</b><p style="color:var(--m);margin:4px 0 8px;font-size:12px">${E(t.m?'Gabungan':(R[t.i]||[])[3])} · Rp ${rp(t.jml)}</p><table><tr><th style="width:4%">No</th><th>Kelengkapan SPJ</th><th>Status</th><th>Sudah ada manual</th><th></th></tr>${cur.L.map((x,n)=>{const kd=x.it[2],btn=kd=='g'?`<button onclick="D('${x.it[3]}',${t.id})">Cetak</button>`:kd=='l'?`<button onclick="spjGo(${t.id},${x.i})">Isi data</button>${x.e.ok?`<button onclick="O('${x.it[3][1]}')">Cetak</button>`:''}`:kd=='h'?`<button onclick="spjGo(${t.id},${x.i})">Isi daftar hadir</button>${x.e.ok?'<button onclick="O(\'dhk\')">Cetak</button>':''}`:kd=='p'?`<button onclick="spjGo(${t.id},${x.i})">Catatan pajak</button>`:'';
+ return `<tr><td>${n+1}</td><td>${E(x.it[1])}</td><td style="color:${x.ok?'#15803d':'#b91c1c'};font-weight:600">${x.ok?'✓ ':'✗ '}${x.e.ok?x.e.txt:x.m?'Dicentang manual':x.e.txt}</td><td style="text-align:center">${x.e.ok&&kd!='x'&&(kd=='g'||x.e.ok)?'':`<input type="checkbox" class="ck" style="width:auto" ${x.m?'checked':''} onchange="spjM(${t.id},${x.i},this.checked)">`}</td><td>${btn}</td></tr>`}).join('')}</table><p style="margin:8px 0 0"><button class="p" onclick="O('spj')">Cetak daftar periksa transaksi ini</button></p></div>`};
+(()=>{const e=Object.entries(TABS),i=e.findIndex(x=>x[0]=='pen');e.splice(i<0?e.length:i,0,['spj','Kelengkapan SPJ']);Object.keys(TABS).forEach(k=>delete TABS[k]);e.forEach(([k,v])=>TABS[k]=v)})();
+
 init();
 </script></body></html>
